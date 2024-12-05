@@ -104,6 +104,7 @@ module.exports = {
       'roles',
       'permissions',
       'organizations',
+      'tasks',
       ,
     ];
     await queryInterface.bulkInsert(
@@ -386,6 +387,31 @@ primary key ("roles_permissionsId", "permissionId")
       {
         createdAt,
         updatedAt,
+        roles_permissionsId: getId('Administrator'),
+        permissionId: getId('CREATE_TASKS'),
+      },
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('Administrator'),
+        permissionId: getId('READ_TASKS'),
+      },
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('Administrator'),
+        permissionId: getId('UPDATE_TASKS'),
+      },
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('Administrator'),
+        permissionId: getId('DELETE_TASKS'),
+      },
+
+      {
+        createdAt,
+        updatedAt,
         roles_permissionsId: getId('SuperAdmin'),
         permissionId: getId('CREATE_USERS'),
       },
@@ -506,6 +532,31 @@ primary key ("roles_permissionsId", "permissionId")
         updatedAt,
         roles_permissionsId: getId('SuperAdmin'),
         permissionId: getId('DELETE_ORGANIZATIONS'),
+      },
+
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('SuperAdmin'),
+        permissionId: getId('CREATE_TASKS'),
+      },
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('SuperAdmin'),
+        permissionId: getId('READ_TASKS'),
+      },
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('SuperAdmin'),
+        permissionId: getId('UPDATE_TASKS'),
+      },
+      {
+        createdAt,
+        updatedAt,
+        roles_permissionsId: getId('SuperAdmin'),
+        permissionId: getId('DELETE_TASKS'),
       },
 
       {

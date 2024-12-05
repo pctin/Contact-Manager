@@ -7,18 +7,18 @@ import LayoutAuthenticated from '../../layouts/Authenticated';
 import SectionMain from '../../components/SectionMain';
 import SectionTitleLineWithButton from '../../components/SectionTitleLineWithButton';
 import { getPageTitle } from '../../config';
-import TableContacts from '../../components/Contacts/TableContacts';
+import TableTasks from '../../components/Tasks/TableTasks';
 import BaseButton from '../../components/BaseButton';
 import axios from 'axios';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '../../stores/hooks';
 import CardBoxModal from '../../components/CardBoxModal';
 import DragDropFilePicker from '../../components/DragDropFilePicker';
-import { setRefetch, uploadCsv } from '../../stores/contacts/contactsSlice';
+import { setRefetch, uploadCsv } from '../../stores/tasks/tasksSlice';
 
 import { hasPermission } from '../../helpers/userPermissions';
 
-const ContactsTablesPage = () => {
+const TasksTablesPage = () => {
   const [filterItems, setFilterItems] = useState([]);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [isModalActive, setIsModalActive] = useState(false);
@@ -29,17 +29,15 @@ const ContactsTablesPage = () => {
   const dispatch = useAppDispatch();
 
   const [filters] = useState([
-    { label: 'Name', title: 'name' },
-    { label: 'EmailAddress', title: 'email_address' },
-    { label: 'PhoneNumber', title: 'phone_number' },
-    { label: 'WebsiteLink', title: 'website_link' },
-    { label: 'Address', title: 'address' },
+    { label: 'Title', title: 'title' },
+    { label: 'Description', title: 'description' },
 
     { label: 'User', title: 'user' },
+    { label: 'Organization', title: 'organization' },
   ]);
 
   const hasCreatePermission =
-    currentUser && hasPermission(currentUser, 'CREATE_CONTACTS');
+    currentUser && hasPermission(currentUser, 'CREATE_TASKS');
 
   const addFilter = () => {
     const newItem = {
@@ -55,9 +53,9 @@ const ContactsTablesPage = () => {
     setFilterItems([...filterItems, newItem]);
   };
 
-  const getContactsCSV = async () => {
+  const getTasksCSV = async () => {
     const response = await axios({
-      url: '/contacts?filetype=csv',
+      url: '/tasks?filetype=csv',
       method: 'GET',
       responseType: 'blob',
     });
@@ -65,7 +63,7 @@ const ContactsTablesPage = () => {
     const blob = new Blob([response.data], { type: type });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = 'contactsCSV.csv';
+    link.download = 'tasksCSV.csv';
     link.click();
   };
 
@@ -85,12 +83,12 @@ const ContactsTablesPage = () => {
   return (
     <>
       <Head>
-        <title>{getPageTitle('Contacts')}</title>
+        <title>{getPageTitle('Tasks')}</title>
       </Head>
       <SectionMain>
         <SectionTitleLineWithButton
           icon={mdiChartTimelineVariant}
-          title='Contacts'
+          title='Tasks'
           main
         >
           {''}
@@ -99,7 +97,7 @@ const ContactsTablesPage = () => {
           {hasCreatePermission && (
             <BaseButton
               className={'mr-3'}
-              href={'/contacts/contacts-new'}
+              href={'/tasks/tasks-new'}
               color='info'
               label='New Item'
             />
@@ -115,7 +113,7 @@ const ContactsTablesPage = () => {
             className={'mr-3'}
             color='info'
             label='Download CSV'
-            onClick={getContactsCSV}
+            onClick={getTasksCSV}
           />
 
           {hasCreatePermission && (
@@ -128,14 +126,10 @@ const ContactsTablesPage = () => {
 
           <div className='md:inline-flex items-center ms-auto'>
             <div id='delete-rows-button'></div>
-
-            <Link href={'/contacts/contacts-list'}>
-              Back to <span className='capitalize'>table</span>
-            </Link>
           </div>
         </CardBox>
         <CardBox className='mb-6' hasTable>
-          <TableContacts
+          <TableTasks
             filterItems={filterItems}
             setFilterItems={setFilterItems}
             filters={filters}
@@ -162,12 +156,10 @@ const ContactsTablesPage = () => {
   );
 };
 
-ContactsTablesPage.getLayout = function getLayout(page: ReactElement) {
+TasksTablesPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutAuthenticated permission={'READ_CONTACTS'}>
-      {page}
-    </LayoutAuthenticated>
+    <LayoutAuthenticated permission={'READ_TASKS'}>{page}</LayoutAuthenticated>
   );
 };
 
-export default ContactsTablesPage;
+export default TasksTablesPage;

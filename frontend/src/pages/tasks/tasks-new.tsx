@@ -28,34 +28,28 @@ import { SelectField } from '../../components/SelectField';
 import { SelectFieldMany } from '../../components/SelectFieldMany';
 import { RichTextField } from '../../components/RichTextField';
 
-import { create } from '../../stores/contacts/contactsSlice';
+import { create } from '../../stores/tasks/tasksSlice';
 import { useAppDispatch } from '../../stores/hooks';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 
 const initialValues = {
-  name: '',
+  title: '',
 
-  email_address: '',
-
-  phone_number: '',
-
-  website_link: '',
+  description: '',
 
   user: '',
 
   organization: '',
-
-  address: '',
 };
 
-const ContactsNew = () => {
+const TasksNew = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (data) => {
     await dispatch(create(data));
-    await router.push('/contacts/contacts-list');
+    await router.push('/tasks/tasks-list');
   };
   return (
     <>
@@ -76,20 +70,12 @@ const ContactsNew = () => {
             onSubmit={(values) => handleSubmit(values)}
           >
             <Form>
-              <FormField label='Name'>
-                <Field name='name' placeholder='Name' />
+              <FormField label='Title'>
+                <Field name='title' placeholder='Title' />
               </FormField>
 
-              <FormField label='EmailAddress'>
-                <Field name='email_address' placeholder='EmailAddress' />
-              </FormField>
-
-              <FormField label='PhoneNumber'>
-                <Field name='phone_number' placeholder='PhoneNumber' />
-              </FormField>
-
-              <FormField label='WebsiteLink'>
-                <Field name='website_link' placeholder='WebsiteLink' />
+              <FormField label='Description'>
+                <Field name='description' placeholder='Description' />
               </FormField>
 
               <FormField label='User' labelFor='user'>
@@ -102,7 +88,7 @@ const ContactsNew = () => {
                 ></Field>
               </FormField>
 
-              <FormField label='organization' labelFor='organization'>
+              <FormField label='Organization' labelFor='organization'>
                 <Field
                   name='organization'
                   id='organization'
@@ -110,10 +96,6 @@ const ContactsNew = () => {
                   options={[]}
                   itemRef={'organizations'}
                 ></Field>
-              </FormField>
-
-              <FormField label='Address'>
-                <Field name='address' placeholder='Address' />
               </FormField>
 
               <BaseDivider />
@@ -125,7 +107,7 @@ const ContactsNew = () => {
                   color='danger'
                   outline
                   label='Cancel'
-                  onClick={() => router.push('/contacts/contacts-list')}
+                  onClick={() => router.push('/tasks/tasks-list')}
                 />
               </BaseButtons>
             </Form>
@@ -136,12 +118,12 @@ const ContactsNew = () => {
   );
 };
 
-ContactsNew.getLayout = function getLayout(page: ReactElement) {
+TasksNew.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutAuthenticated permission={'CREATE_CONTACTS'}>
+    <LayoutAuthenticated permission={'CREATE_TASKS'}>
       {page}
     </LayoutAuthenticated>
   );
 };
 
-export default ContactsNew;
+export default TasksNew;

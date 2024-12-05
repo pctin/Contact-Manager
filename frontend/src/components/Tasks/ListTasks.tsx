@@ -11,7 +11,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import { hasPermission } from '../../helpers/userPermissions';
 
 type Props = {
-  contacts: any[];
+  tasks: any[];
   loading: boolean;
   onDelete: (id: string) => void;
   onView: (id: string) => void;
@@ -21,8 +21,8 @@ type Props = {
   onPageChange: (page: number) => void;
 };
 
-const ListContacts = ({
-  contacts,
+const ListTasks = ({
+  tasks,
   loading,
   onEdit,
   onView,
@@ -32,7 +32,7 @@ const ListContacts = ({
   onPageChange,
 }: Props) => {
   const currentUser = useAppSelector((state) => state.auth.currentUser);
-  const hasUpdatePermission = hasPermission(currentUser, 'UPDATE_CONTACTS');
+  const hasUpdatePermission = hasPermission(currentUser, 'UPDATE_TASKS');
 
   const corners = useAppSelector((state) => state.style.corners);
   const bgColor = useAppSelector((state) => state.style.cardsColor);
@@ -42,7 +42,7 @@ const ListContacts = ({
       <div className='relative overflow-x-auto p-4 space-y-4'>
         {loading && <LoadingSpinner />}
         {!loading &&
-          contacts.map((item) => (
+          tasks.map((item) => (
             <CardBox
               hasTable
               isList
@@ -59,23 +59,13 @@ const ListContacts = ({
                   onClick={() => onView(item.id)}
                 >
                   <div className={'flex-1 px-3'}>
-                    <p className={'text-xs   text-gray-500 '}>Name</p>
-                    <p className={'line-clamp-2'}>{item.name}</p>
+                    <p className={'text-xs   text-gray-500 '}>Title</p>
+                    <p className={'line-clamp-2'}>{item.title}</p>
                   </div>
 
                   <div className={'flex-1 px-3'}>
-                    <p className={'text-xs   text-gray-500 '}>EmailAddress</p>
-                    <p className={'line-clamp-2'}>{item.email_address}</p>
-                  </div>
-
-                  <div className={'flex-1 px-3'}>
-                    <p className={'text-xs   text-gray-500 '}>PhoneNumber</p>
-                    <p className={'line-clamp-2'}>{item.phone_number}</p>
-                  </div>
-
-                  <div className={'flex-1 px-3'}>
-                    <p className={'text-xs   text-gray-500 '}>WebsiteLink</p>
-                    <p className={'line-clamp-2'}>{item.website_link}</p>
+                    <p className={'text-xs   text-gray-500 '}>Description</p>
+                    <p className={'line-clamp-2'}>{item.description}</p>
                   </div>
 
                   <div className={'flex-1 px-3'}>
@@ -86,8 +76,12 @@ const ListContacts = ({
                   </div>
 
                   <div className={'flex-1 px-3'}>
-                    <p className={'text-xs   text-gray-500 '}>Address</p>
-                    <p className={'line-clamp-2'}>{item.address}</p>
+                    <p className={'text-xs   text-gray-500 '}>Organization</p>
+                    <p className={'line-clamp-2'}>
+                      {dataFormatter.organizationsOneListFormatter(
+                        item.organization,
+                      )}
+                    </p>
                   </div>
                 </div>
                 <ListActionsPopover
@@ -95,14 +89,14 @@ const ListContacts = ({
                   onView={onView}
                   onEdit={onEdit}
                   itemId={item.id}
-                  pathEdit={`/contacts/contacts-edit/?id=${item.id}`}
-                  pathView={`/contacts/contacts-view/?id=${item.id}`}
+                  pathEdit={`/tasks/tasks-edit/?id=${item.id}`}
+                  pathView={`/tasks/tasks-view/?id=${item.id}`}
                   hasUpdatePermission={hasUpdatePermission}
                 />
               </div>
             </CardBox>
           ))}
-        {!loading && contacts.length === 0 && (
+        {!loading && tasks.length === 0 && (
           <div className='col-span-full flex items-center justify-center h-40'>
             <p className=''>No data to display</p>
           </div>
@@ -119,4 +113,4 @@ const ListContacts = ({
   );
 };
 
-export default ListContacts;
+export default ListTasks;

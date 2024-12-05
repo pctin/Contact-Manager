@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import dayjs from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../stores/hooks';
 import { useRouter } from 'next/router';
-import { fetch } from '../../stores/contacts/contactsSlice';
+import { fetch } from '../../stores/tasks/tasksSlice';
 import { saveFile } from '../../helpers/fileSaver';
 import dataFormatter from '../../helpers/dataFormatter';
 import ImageField from '../../components/ImageField';
@@ -23,10 +23,10 @@ import FormField from '../../components/FormField';
 
 import { hasPermission } from '../../helpers/userPermissions';
 
-const ContactsView = () => {
+const TasksView = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { contacts } = useAppSelector((state) => state.contacts);
+  const { tasks } = useAppSelector((state) => state.tasks);
 
   const { currentUser } = useAppSelector((state) => state.auth);
 
@@ -44,62 +44,47 @@ const ContactsView = () => {
   return (
     <>
       <Head>
-        <title>{getPageTitle('View contacts')}</title>
+        <title>{getPageTitle('View tasks')}</title>
       </Head>
       <SectionMain>
         <SectionTitleLineWithButton
           icon={mdiChartTimelineVariant}
-          title={removeLastCharacter('View contacts')}
+          title={removeLastCharacter('View tasks')}
           main
         >
           {''}
         </SectionTitleLineWithButton>
         <CardBox>
           <div className={'mb-4'}>
-            <p className={'block font-bold mb-2'}>Name</p>
-            <p>{contacts?.name}</p>
+            <p className={'block font-bold mb-2'}>Title</p>
+            <p>{tasks?.title}</p>
           </div>
 
           <div className={'mb-4'}>
-            <p className={'block font-bold mb-2'}>EmailAddress</p>
-            <p>{contacts?.email_address}</p>
-          </div>
-
-          <div className={'mb-4'}>
-            <p className={'block font-bold mb-2'}>PhoneNumber</p>
-            <p>{contacts?.phone_number}</p>
-          </div>
-
-          <div className={'mb-4'}>
-            <p className={'block font-bold mb-2'}>WebsiteLink</p>
-            <p>{contacts?.website_link}</p>
+            <p className={'block font-bold mb-2'}>Description</p>
+            <p>{tasks?.description}</p>
           </div>
 
           <div className={'mb-4'}>
             <p className={'block font-bold mb-2'}>User</p>
 
-            <p>{contacts?.user?.firstName ?? 'No data'}</p>
+            <p>{tasks?.user?.firstName ?? 'No data'}</p>
           </div>
 
           {hasPermission(currentUser, 'READ_ORGANIZATIONS') && (
             <div className={'mb-4'}>
-              <p className={'block font-bold mb-2'}>organization</p>
+              <p className={'block font-bold mb-2'}>Organization</p>
 
-              <p>{contacts?.organization?.name ?? 'No data'}</p>
+              <p>{tasks?.organization?.name ?? 'No data'}</p>
             </div>
           )}
-
-          <div className={'mb-4'}>
-            <p className={'block font-bold mb-2'}>Address</p>
-            <p>{contacts?.address}</p>
-          </div>
 
           <BaseDivider />
 
           <BaseButton
             color='info'
             label='Back'
-            onClick={() => router.push('/contacts/contacts-list')}
+            onClick={() => router.push('/tasks/tasks-list')}
           />
         </CardBox>
       </SectionMain>
@@ -107,12 +92,10 @@ const ContactsView = () => {
   );
 };
 
-ContactsView.getLayout = function getLayout(page: ReactElement) {
+TasksView.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutAuthenticated permission={'READ_CONTACTS'}>
-      {page}
-    </LayoutAuthenticated>
+    <LayoutAuthenticated permission={'READ_TASKS'}>{page}</LayoutAuthenticated>
   );
 };
 
-export default ContactsView;
+export default TasksView;

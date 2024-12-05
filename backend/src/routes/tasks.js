@@ -1,7 +1,7 @@
 const express = require('express');
 
-const ContactsService = require('../services/contacts');
-const ContactsDBApi = require('../db/api/contacts');
+const TasksService = require('../services/tasks');
+const TasksDBApi = require('../db/api/tasks');
 const wrapAsync = require('../helpers').wrapAsync;
 
 const config = require('../config');
@@ -12,48 +12,39 @@ const { parse } = require('json2csv');
 
 const { checkCrudPermissions } = require('../middlewares/check-permissions');
 
-router.use(checkCrudPermissions('contacts'));
+router.use(checkCrudPermissions('tasks'));
 
 /**
  *  @swagger
  *  components:
  *    schemas:
- *      Contacts:
+ *      Tasks:
  *        type: object
  *        properties:
 
- *          name:
+ *          title:
  *            type: string
- *            default: name
- *          email_address:
+ *            default: title
+ *          description:
  *            type: string
- *            default: email_address
- *          phone_number:
- *            type: string
- *            default: phone_number
- *          website_link:
- *            type: string
- *            default: website_link
- *          address:
- *            type: string
- *            default: address
+ *            default: description
 
  */
 
 /**
  *  @swagger
  * tags:
- *   name: Contacts
- *   description: The Contacts managing API
+ *   name: Tasks
+ *   description: The Tasks managing API
  */
 
 /**
  *  @swagger
- *  /api/contacts:
+ *  /api/tasks:
  *    post:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
+ *      tags: [Tasks]
  *      summary: Add new item
  *      description: Add new item
  *      requestBody:
@@ -65,14 +56,14 @@ router.use(checkCrudPermissions('contacts'));
  *                data:
  *                  description: Data of the updated item
  *                  type: object
- *                  $ref: "#/components/schemas/Contacts"
+ *                  $ref: "#/components/schemas/Tasks"
  *      responses:
  *        200:
  *          description: The item was successfully added
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Contacts"
+ *                $ref: "#/components/schemas/Tasks"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        405:
@@ -87,12 +78,7 @@ router.post(
       req.headers.referer ||
       `${req.protocol}://${req.hostname}${req.originalUrl}`;
     const link = new URL(referer);
-    await ContactsService.create(
-      req.body.data,
-      req.currentUser,
-      true,
-      link.host,
-    );
+    await TasksService.create(req.body.data, req.currentUser, true, link.host);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -104,7 +90,7 @@ router.post(
  *  post:
  *    security:
  *      - bearerAuth: []
- *    tags: [Contacts]
+ *    tags: [Tasks]
  *    summary: Bulk import items
  *    description: Bulk import items
  *    requestBody:
@@ -117,14 +103,14 @@ router.post(
  *              description: Data of the updated items
  *              type: array
  *              items:
- *                $ref: "#/components/schemas/Contacts"
+ *                $ref: "#/components/schemas/Tasks"
  *    responses:
  *      200:
  *        description: The items were successfully imported
  *    content:
  *      application/json:
  *        schema:
- *          $ref: "#/components/schemas/Contacts"
+ *          $ref: "#/components/schemas/Tasks"
  *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
  *      405:
@@ -140,7 +126,7 @@ router.post(
       req.headers.referer ||
       `${req.protocol}://${req.hostname}${req.originalUrl}`;
     const link = new URL(referer);
-    await ContactsService.bulkImport(req, res, true, link.host);
+    await TasksService.bulkImport(req, res, true, link.host);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -148,11 +134,11 @@ router.post(
 
 /**
  *  @swagger
- *  /api/contacts/{id}:
+ *  /api/tasks/{id}:
  *    put:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
+ *      tags: [Tasks]
  *      summary: Update the data of the selected item
  *      description: Update the data of the selected item
  *      parameters:
@@ -175,7 +161,7 @@ router.post(
  *                data:
  *                  description: Data of the updated item
  *                  type: object
- *                  $ref: "#/components/schemas/Contacts"
+ *                  $ref: "#/components/schemas/Tasks"
  *              required:
  *                - id
  *      responses:
@@ -184,7 +170,7 @@ router.post(
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Contacts"
+ *                $ref: "#/components/schemas/Tasks"
  *        400:
  *          description: Invalid ID supplied
  *        401:
@@ -197,7 +183,7 @@ router.post(
 router.put(
   '/:id',
   wrapAsync(async (req, res) => {
-    await ContactsService.update(req.body.data, req.body.id, req.currentUser);
+    await TasksService.update(req.body.data, req.body.id, req.currentUser);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -205,11 +191,11 @@ router.put(
 
 /**
  * @swagger
- *  /api/contacts/{id}:
+ *  /api/tasks/{id}:
  *    delete:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
+ *      tags: [Tasks]
  *      summary: Delete the selected item
  *      description: Delete the selected item
  *      parameters:
@@ -225,7 +211,7 @@ router.put(
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Contacts"
+ *                $ref: "#/components/schemas/Tasks"
  *        400:
  *          description: Invalid ID supplied
  *        401:
@@ -238,7 +224,7 @@ router.put(
 router.delete(
   '/:id',
   wrapAsync(async (req, res) => {
-    await ContactsService.remove(req.params.id, req.currentUser);
+    await TasksService.remove(req.params.id, req.currentUser);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -246,11 +232,11 @@ router.delete(
 
 /**
  *  @swagger
- *  /api/contacts/deleteByIds:
+ *  /api/tasks/deleteByIds:
  *    post:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
+ *      tags: [Tasks]
  *      summary: Delete the selected item list
  *      description: Delete the selected item list
  *      requestBody:
@@ -268,7 +254,7 @@ router.delete(
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Contacts"
+ *                $ref: "#/components/schemas/Tasks"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -279,7 +265,7 @@ router.delete(
 router.post(
   '/deleteByIds',
   wrapAsync(async (req, res) => {
-    await ContactsService.deleteByIds(req.body.data, req.currentUser);
+    await TasksService.deleteByIds(req.body.data, req.currentUser);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -287,22 +273,22 @@ router.post(
 
 /**
  *  @swagger
- *  /api/contacts:
+ *  /api/tasks:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
- *      summary: Get all contacts
- *      description: Get all contacts
+ *      tags: [Tasks]
+ *      summary: Get all tasks
+ *      description: Get all tasks
  *      responses:
  *        200:
- *          description: Contacts list successfully received
+ *          description: Tasks list successfully received
  *          content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
- *                  $ref: "#/components/schemas/Contacts"
+ *                  $ref: "#/components/schemas/Tasks"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -317,16 +303,9 @@ router.get(
 
     const globalAccess = req.currentUser.app_role.globalAccess;
 
-    const payload = await ContactsDBApi.findAll(req.query, globalAccess);
+    const payload = await TasksDBApi.findAll(req.query, globalAccess);
     if (filetype && filetype === 'csv') {
-      const fields = [
-        'id',
-        'name',
-        'email_address',
-        'phone_number',
-        'website_link',
-        'address',
-      ];
+      const fields = ['id', 'title', 'description'];
       const opts = { fields };
       try {
         const csv = parse(payload.rows, opts);
@@ -343,22 +322,22 @@ router.get(
 
 /**
  *  @swagger
- *  /api/contacts/count:
+ *  /api/tasks/count:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
- *      summary: Count all contacts
- *      description: Count all contacts
+ *      tags: [Tasks]
+ *      summary: Count all tasks
+ *      description: Count all tasks
  *      responses:
  *        200:
- *          description: Contacts count successfully received
+ *          description: Tasks count successfully received
  *          content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
- *                  $ref: "#/components/schemas/Contacts"
+ *                  $ref: "#/components/schemas/Tasks"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -371,7 +350,7 @@ router.get(
   wrapAsync(async (req, res) => {
     const globalAccess = req.currentUser.app_role.globalAccess;
 
-    const payload = await ContactsDBApi.findAll(req.query, globalAccess, {
+    const payload = await TasksDBApi.findAll(req.query, globalAccess, {
       countOnly: true,
     });
 
@@ -381,22 +360,22 @@ router.get(
 
 /**
  *  @swagger
- *  /api/contacts/autocomplete:
+ *  /api/tasks/autocomplete:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
- *      summary: Find all contacts that match search criteria
- *      description: Find all contacts that match search criteria
+ *      tags: [Tasks]
+ *      summary: Find all tasks that match search criteria
+ *      description: Find all tasks that match search criteria
  *      responses:
  *        200:
- *          description: Contacts list successfully received
+ *          description: Tasks list successfully received
  *          content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
- *                  $ref: "#/components/schemas/Contacts"
+ *                  $ref: "#/components/schemas/Tasks"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -409,7 +388,7 @@ router.get('/autocomplete', async (req, res) => {
 
   const organizationId = req.currentUser.organization?.id;
 
-  const payload = await ContactsDBApi.findAllAutocomplete(
+  const payload = await TasksDBApi.findAllAutocomplete(
     req.query.query,
     req.query.limit,
     globalAccess,
@@ -421,11 +400,11 @@ router.get('/autocomplete', async (req, res) => {
 
 /**
  * @swagger
- *  /api/contacts/{id}:
+ *  /api/tasks/{id}:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Contacts]
+ *      tags: [Tasks]
  *      summary: Get selected item
  *      description: Get selected item
  *      parameters:
@@ -441,7 +420,7 @@ router.get('/autocomplete', async (req, res) => {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Contacts"
+ *                $ref: "#/components/schemas/Tasks"
  *        400:
  *          description: Invalid ID supplied
  *        401:
@@ -454,7 +433,7 @@ router.get('/autocomplete', async (req, res) => {
 router.get(
   '/:id',
   wrapAsync(async (req, res) => {
-    const payload = await ContactsDBApi.findBy({ id: req.params.id });
+    const payload = await TasksDBApi.findBy({ id: req.params.id });
 
     res.status(200).send(payload);
   }),

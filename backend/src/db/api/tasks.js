@@ -6,20 +6,17 @@ const Utils = require('../utils');
 const Sequelize = db.Sequelize;
 const Op = Sequelize.Op;
 
-module.exports = class ContactsDBApi {
+module.exports = class TasksDBApi {
   static async create(data, options) {
     const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
-    const contacts = await db.contacts.create(
+    const tasks = await db.tasks.create(
       {
         id: data.id || undefined,
 
-        name: data.name || null,
-        email_address: data.email_address || null,
-        phone_number: data.phone_number || null,
-        website_link: data.website_link || null,
-        address: data.address || null,
+        title: data.title || null,
+        description: data.description || null,
         importHash: data.importHash || null,
         createdById: currentUser.id,
         updatedById: currentUser.id,
@@ -27,15 +24,15 @@ module.exports = class ContactsDBApi {
       { transaction },
     );
 
-    await contacts.setUser(data.user || null, {
+    await tasks.setUser(data.user || null, {
       transaction,
     });
 
-    await contacts.setOrganization(currentUser.organization.id || null, {
+    await tasks.setOrganization(currentUser.organization.id || null, {
       transaction,
     });
 
-    return contacts;
+    return tasks;
   }
 
   static async bulkImport(data, options) {
@@ -43,14 +40,11 @@ module.exports = class ContactsDBApi {
     const transaction = (options && options.transaction) || undefined;
 
     // Prepare data - wrapping individual data transformations in a map() method
-    const contactsData = data.map((item, index) => ({
+    const tasksData = data.map((item, index) => ({
       id: item.id || undefined,
 
-      name: item.name || null,
-      email_address: item.email_address || null,
-      phone_number: item.phone_number || null,
-      website_link: item.website_link || null,
-      address: item.address || null,
+      title: item.title || null,
+      description: item.description || null,
       importHash: item.importHash || null,
       createdById: currentUser.id,
       updatedById: currentUser.id,
@@ -58,13 +52,11 @@ module.exports = class ContactsDBApi {
     }));
 
     // Bulk create items
-    const contacts = await db.contacts.bulkCreate(contactsData, {
-      transaction,
-    });
+    const tasks = await db.tasks.bulkCreate(tasksData, { transaction });
 
     // For each item created, replace relation files
 
-    return contacts;
+    return tasks;
   }
 
   static async update(id, data, options) {
@@ -72,39 +64,36 @@ module.exports = class ContactsDBApi {
     const transaction = (options && options.transaction) || undefined;
     const globalAccess = currentUser.app_role?.globalAccess;
 
-    const contacts = await db.contacts.findByPk(id, {}, { transaction });
+    const tasks = await db.tasks.findByPk(id, {}, { transaction });
 
-    await contacts.update(
+    await tasks.update(
       {
-        name: data.name || null,
-        email_address: data.email_address || null,
-        phone_number: data.phone_number || null,
-        website_link: data.website_link || null,
-        address: data.address || null,
+        title: data.title || null,
+        description: data.description || null,
         updatedById: currentUser.id,
       },
       { transaction },
     );
 
-    await contacts.setUser(data.user || null, {
+    await tasks.setUser(data.user || null, {
       transaction,
     });
 
-    await contacts.setOrganization(
+    await tasks.setOrganization(
       (globalAccess ? data.organization : currentUser.organization.id) || null,
       {
         transaction,
       },
     );
 
-    return contacts;
+    return tasks;
   }
 
   static async deleteByIds(ids, options) {
     const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
-    const contacts = await db.contacts.findAll({
+    const tasks = await db.tasks.findAll({
       where: {
         id: {
           [Op.in]: ids,
@@ -114,24 +103,24 @@ module.exports = class ContactsDBApi {
     });
 
     await db.sequelize.transaction(async (transaction) => {
-      for (const record of contacts) {
+      for (const record of tasks) {
         await record.update({ deletedBy: currentUser.id }, { transaction });
       }
-      for (const record of contacts) {
+      for (const record of tasks) {
         await record.destroy({ transaction });
       }
     });
 
-    return contacts;
+    return tasks;
   }
 
   static async remove(id, options) {
     const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
-    const contacts = await db.contacts.findByPk(id, options);
+    const tasks = await db.tasks.findByPk(id, options);
 
-    await contacts.update(
+    await tasks.update(
       {
         deletedBy: currentUser.id,
       },
@@ -140,29 +129,29 @@ module.exports = class ContactsDBApi {
       },
     );
 
-    await contacts.destroy({
+    await tasks.destroy({
       transaction,
     });
 
-    return contacts;
+    return tasks;
   }
 
   static async findBy(where, options) {
     const transaction = (options && options.transaction) || undefined;
 
-    const contacts = await db.contacts.findOne({ where }, { transaction });
+    const tasks = await db.tasks.findOne({ where }, { transaction });
 
-    if (!contacts) {
-      return contacts;
+    if (!tasks) {
+      return tasks;
     }
 
-    const output = contacts.get({ plain: true });
+    const output = tasks.get({ plain: true });
 
-    output.user = await contacts.getUser({
+    output.user = await tasks.getUser({
       transaction,
     });
 
-    output.organization = await contacts.getOrganization({
+    output.organization = await tasks.getOrganization({
       transaction,
     });
 
@@ -200,50 +189,17 @@ module.exports = class ContactsDBApi {
         };
       }
 
-      if (filter.name) {
+      if (filter.title) {
         where = {
           ...where,
-          [Op.and]: Utils.ilike('contacts', 'name', filter.name),
+          [Op.and]: Utils.ilike('tasks', 'title', filter.title),
         };
       }
 
-      if (filter.email_address) {
+      if (filter.description) {
         where = {
           ...where,
-          [Op.and]: Utils.ilike(
-            'contacts',
-            'email_address',
-            filter.email_address,
-          ),
-        };
-      }
-
-      if (filter.phone_number) {
-        where = {
-          ...where,
-          [Op.and]: Utils.ilike(
-            'contacts',
-            'phone_number',
-            filter.phone_number,
-          ),
-        };
-      }
-
-      if (filter.website_link) {
-        where = {
-          ...where,
-          [Op.and]: Utils.ilike(
-            'contacts',
-            'website_link',
-            filter.website_link,
-          ),
-        };
-      }
-
-      if (filter.address) {
-        where = {
-          ...where,
-          [Op.and]: Utils.ilike('contacts', 'address', filter.address),
+          [Op.and]: Utils.ilike('tasks', 'description', filter.description),
         };
       }
 
@@ -309,7 +265,7 @@ module.exports = class ContactsDBApi {
     let { rows, count } = options?.countOnly
       ? {
           rows: [],
-          count: await db.contacts.count({
+          count: await db.tasks.count({
             where: globalAccess ? {} : where,
             include,
             distinct: true,
@@ -322,7 +278,7 @@ module.exports = class ContactsDBApi {
             transaction,
           }),
         }
-      : await db.contacts.findAndCountAll({
+      : await db.tasks.findAndCountAll({
           where: globalAccess ? {} : where,
           include,
           distinct: true,
@@ -354,21 +310,21 @@ module.exports = class ContactsDBApi {
       where = {
         [Op.or]: [
           { ['id']: Utils.uuid(query) },
-          Utils.ilike('contacts', 'name', query),
+          Utils.ilike('tasks', 'id', query),
         ],
       };
     }
 
-    const records = await db.contacts.findAll({
-      attributes: ['id', 'name'],
+    const records = await db.tasks.findAll({
+      attributes: ['id', 'id'],
       where,
       limit: limit ? Number(limit) : undefined,
-      orderBy: [['name', 'ASC']],
+      orderBy: [['id', 'ASC']],
     });
 
     return records.map((record) => ({
       id: record.id,
-      label: record.name,
+      label: record.id,
     }));
   }
 };

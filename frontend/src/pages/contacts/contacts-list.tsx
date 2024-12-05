@@ -33,6 +33,7 @@ const ContactsTablesPage = () => {
     { label: 'EmailAddress', title: 'email_address' },
     { label: 'PhoneNumber', title: 'phone_number' },
     { label: 'WebsiteLink', title: 'website_link' },
+    { label: 'Address', title: 'address' },
 
     { label: 'User', title: 'user' },
   ]);

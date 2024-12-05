@@ -43,9 +43,21 @@ module.exports = class SearchService {
       const tableColumns = {
         users: ['firstName', 'lastName', 'phoneNumber', 'email'],
 
-        contacts: ['name', 'email_address', 'phone_number', 'website_link'],
+        contacts: [
+          'name',
+
+          'email_address',
+
+          'phone_number',
+
+          'website_link',
+
+          'address',
+        ],
 
         organizations: ['name'],
+
+        tasks: ['title', 'description'],
       };
       const columnsInt = {};
 

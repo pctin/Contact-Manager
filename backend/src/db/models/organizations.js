@@ -50,6 +50,14 @@ module.exports = function (sequelize, DataTypes) {
       constraints: false,
     });
 
+    db.organizations.hasMany(db.tasks, {
+      as: 'tasks_organization',
+      foreignKey: {
+        name: 'organizationId',
+      },
+      constraints: false,
+    });
+
     //end loop
 
     db.organizations.belongsTo(db.users, {

@@ -37,12 +37,12 @@ export const loadColumns = async (
     }
   }
 
-  const hasUpdatePermission = hasPermission(user, 'UPDATE_CONTACTS');
+  const hasUpdatePermission = hasPermission(user, 'UPDATE_TASKS');
 
   return [
     {
-      field: 'name',
-      headerName: 'Name',
+      field: 'title',
+      headerName: 'Title',
       flex: 1,
       minWidth: 120,
       filterable: false,
@@ -53,32 +53,8 @@ export const loadColumns = async (
     },
 
     {
-      field: 'email_address',
-      headerName: 'EmailAddress',
-      flex: 1,
-      minWidth: 120,
-      filterable: false,
-      headerClassName: 'datagrid--header',
-      cellClassName: 'datagrid--cell',
-
-      editable: hasUpdatePermission,
-    },
-
-    {
-      field: 'phone_number',
-      headerName: 'PhoneNumber',
-      flex: 1,
-      minWidth: 120,
-      filterable: false,
-      headerClassName: 'datagrid--header',
-      cellClassName: 'datagrid--cell',
-
-      editable: hasUpdatePermission,
-    },
-
-    {
-      field: 'website_link',
-      headerName: 'WebsiteLink',
+      field: 'description',
+      headerName: 'Description',
       flex: 1,
       minWidth: 120,
       filterable: false,
@@ -109,8 +85,8 @@ export const loadColumns = async (
     },
 
     {
-      field: 'address',
-      headerName: 'Address',
+      field: 'organization',
+      headerName: 'Organization',
       flex: 1,
       minWidth: 120,
       filterable: false,
@@ -118,6 +94,14 @@ export const loadColumns = async (
       cellClassName: 'datagrid--cell',
 
       editable: hasUpdatePermission,
+
+      sortable: false,
+      type: 'singleSelect',
+      getOptionValue: (value: any) => value?.id,
+      getOptionLabel: (value: any) => value?.label,
+      valueOptions: await callOptionsApi('organizations'),
+      valueGetter: (params: GridValueGetterParams) =>
+        params?.value?.id ?? params?.value,
     },
 
     {
@@ -133,8 +117,8 @@ export const loadColumns = async (
             onView={onView}
             onEdit={onEdit}
             itemId={params?.row?.id}
-            pathEdit={`/contacts/contacts-edit/?id=${params?.row?.id}`}
-            pathView={`/contacts/contacts-view/?id=${params?.row?.id}`}
+            pathEdit={`/tasks/tasks-edit/?id=${params?.row?.id}`}
+            pathView={`/tasks/tasks-view/?id=${params?.row?.id}`}
             key={1}
             hasUpdatePermission={hasUpdatePermission}
           />,

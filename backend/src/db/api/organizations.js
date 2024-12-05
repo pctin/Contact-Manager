@@ -144,6 +144,10 @@ module.exports = class OrganizationsDBApi {
       },
     );
 
+    output.tasks_organization = await organizations.getTasks_organization({
+      transaction,
+    });
+
     return output;
   }
 

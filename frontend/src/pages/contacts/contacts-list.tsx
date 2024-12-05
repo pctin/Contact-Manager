@@ -110,20 +110,20 @@ const ContactsTablesPage = () => {
             label='Filter'
             onClick={addFilter}
           />
-          <BaseButton
-            className={'mr-3'}
-            color='info'
-            label='Download CSV'
-            onClick={getContactsCSV}
-          />
+          {/*<BaseButton*/}
+          {/*  className={'mr-3'}*/}
+          {/*  color='info'*/}
+          {/*  label='Download CSV'*/}
+          {/*  onClick={getContactsCSV}*/}
+          {/*/>*/}
 
-          {hasCreatePermission && (
-            <BaseButton
-              color='info'
-              label='Upload CSV'
-              onClick={() => setIsModalActive(true)}
-            />
-          )}
+          {/*{hasCreatePermission && (*/}
+          {/*  <BaseButton*/}
+          {/*    color='info'*/}
+          {/*    label='Upload CSV'*/}
+          {/*    onClick={() => setIsModalActive(true)}*/}
+          {/*  />*/}
+          {/*)}*/}
 
           <div className='md:inline-flex items-center ms-auto'>
             <div id='delete-rows-button'></div>

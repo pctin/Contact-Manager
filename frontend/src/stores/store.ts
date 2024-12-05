@@ -9,6 +9,7 @@ import contactsSlice from './contacts/contactsSlice';
 import rolesSlice from './roles/rolesSlice';
 import permissionsSlice from './permissions/permissionsSlice';
 import organizationsSlice from './organizations/organizationsSlice';
+import tasksSlice from './tasks/tasksSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     roles: rolesSlice,
     permissions: permissionsSlice,
     organizations: organizationsSlice,
+    tasks: tasksSlice,
   },
 });
 

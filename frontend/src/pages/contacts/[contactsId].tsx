@@ -50,6 +50,8 @@ const EditContacts = () => {
     user: '',
 
     organization: '',
+
+    address: '',
   };
   const [initialValues, setInitialValues] = useState(initVals);
 
@@ -145,6 +147,10 @@ const EditContacts = () => {
                   ></Field>
                 </FormField>
               )}
+
+              <FormField label='Address'>
+                <Field name='address' placeholder='Address' />
+              </FormField>
 
               <BaseDivider />
               <BaseButtons>

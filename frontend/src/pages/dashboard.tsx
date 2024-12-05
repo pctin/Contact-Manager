@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [roles, setRoles] = React.useState('Loading...');
   const [permissions, setPermissions] = React.useState('Loading...');
   const [organizations, setOrganizations] = React.useState('Loading...');
+  const [tasks, setTasks] = React.useState('Loading...');
 
   const [widgetsRole, setWidgetsRole] = React.useState({
     role: { value: '', label: '' },
@@ -45,6 +46,7 @@ const Dashboard = () => {
       'roles',
       'permissions',
       'organizations',
+      'tasks',
     ];
     const fns = [
       setUsers,
@@ -52,6 +54,7 @@ const Dashboard = () => {
       setRoles,
       setPermissions,
       setOrganizations,
+      setTasks,
     ];
 
     const requests = entities.map((entity, index) => {
@@ -306,6 +309,38 @@ const Dashboard = () => {
                     </div>
                     <div className='text-3xl leading-tight font-semibold'>
                       {organizations}
+                    </div>
+                  </div>
+                  <div>
+                    <BaseIcon
+                      className={`${iconsColor}`}
+                      w='w-16'
+                      h='h-16'
+                      size={48}
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      path={icon.mdiTable || icon.mdiTable}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {hasPermission(currentUser, 'READ_TASKS') && (
+            <Link href={'/tasks/tasks-list'}>
+              <div
+                className={`${
+                  corners !== 'rounded-full' ? corners : 'rounded-3xl'
+                } dark:bg-dark-900 ${cardsStyle} dark:border-dark-700 p-6`}
+              >
+                <div className='flex justify-between align-center'>
+                  <div>
+                    <div className='text-lg leading-tight   text-gray-500 dark:text-gray-400'>
+                      Tasks
+                    </div>
+                    <div className='text-3xl leading-tight font-semibold'>
+                      {tasks}
                     </div>
                   </div>
                   <div>

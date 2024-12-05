@@ -101,6 +101,14 @@ module.exports = function (sequelize, DataTypes) {
       constraints: false,
     });
 
+    db.users.hasMany(db.tasks, {
+      as: 'tasks_user',
+      foreignKey: {
+        name: 'userId',
+      },
+      constraints: false,
+    });
+
     //end loop
 
     db.users.belongsTo(db.roles, {

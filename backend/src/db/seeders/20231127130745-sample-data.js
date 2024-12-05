@@ -5,6 +5,8 @@ const Contacts = db.contacts;
 
 const Organizations = db.organizations;
 
+const Tasks = db.tasks;
+
 const ContactsData = [
   {
     name: 'Alice Johnson',
@@ -18,6 +20,8 @@ const ContactsData = [
     // type code here for "relation_one" field
 
     // type code here for "relation_one" field
+
+    address: 'Alfred Wegener',
   },
 
   {
@@ -32,6 +36,8 @@ const ContactsData = [
     // type code here for "relation_one" field
 
     // type code here for "relation_one" field
+
+    address: 'Ernest Rutherford',
   },
 
   {
@@ -46,6 +52,8 @@ const ContactsData = [
     // type code here for "relation_one" field
 
     // type code here for "relation_one" field
+
+    address: 'Rudolf Virchow',
   },
 
   {
@@ -60,20 +68,8 @@ const ContactsData = [
     // type code here for "relation_one" field
 
     // type code here for "relation_one" field
-  },
 
-  {
-    name: 'Ethan Hunt',
-
-    email_address: 'ethan.hunt@futurevision.com',
-
-    phone_number: '555-6789',
-
-    website_link: 'https://ethanhunt.com',
-
-    // type code here for "relation_one" field
-
-    // type code here for "relation_one" field
+    address: 'Galileo Galilei',
   },
 ];
 
@@ -93,9 +89,47 @@ const OrganizationsData = [
   {
     name: 'NextGen Technologies',
   },
+];
+
+const TasksData = [
+  {
+    title: 'James Clerk Maxwell',
+
+    description: 'Gustav Kirchhoff',
+
+    // type code here for "relation_one" field
+
+    // type code here for "relation_one" field
+  },
 
   {
-    name: 'Future Vision',
+    title: 'Emil Kraepelin',
+
+    description: 'Paul Ehrlich',
+
+    // type code here for "relation_one" field
+
+    // type code here for "relation_one" field
+  },
+
+  {
+    title: 'Justus Liebig',
+
+    description: 'Emil Kraepelin',
+
+    // type code here for "relation_one" field
+
+    // type code here for "relation_one" field
+  },
+
+  {
+    title: 'Max Delbruck',
+
+    description: 'Gustav Kirchhoff',
+
+    // type code here for "relation_one" field
+
+    // type code here for "relation_one" field
   },
 ];
 
@@ -145,17 +179,6 @@ async function associateUserWithOrganization() {
   if (User3?.setOrganization) {
     await User3.setOrganization(relatedOrganization3);
   }
-
-  const relatedOrganization4 = await Organizations.findOne({
-    offset: Math.floor(Math.random() * (await Organizations.count())),
-  });
-  const User4 = await Users.findOne({
-    order: [['id', 'ASC']],
-    offset: 4,
-  });
-  if (User4?.setOrganization) {
-    await User4.setOrganization(relatedOrganization4);
-  }
 }
 
 async function associateContactWithUser() {
@@ -201,17 +224,6 @@ async function associateContactWithUser() {
   });
   if (Contact3?.setUser) {
     await Contact3.setUser(relatedUser3);
-  }
-
-  const relatedUser4 = await Users.findOne({
-    offset: Math.floor(Math.random() * (await Users.count())),
-  });
-  const Contact4 = await Contacts.findOne({
-    order: [['id', 'ASC']],
-    offset: 4,
-  });
-  if (Contact4?.setUser) {
-    await Contact4.setUser(relatedUser4);
   }
 }
 
@@ -259,16 +271,97 @@ async function associateContactWithOrganization() {
   if (Contact3?.setOrganization) {
     await Contact3.setOrganization(relatedOrganization3);
   }
+}
 
-  const relatedOrganization4 = await Organizations.findOne({
+async function associateTaskWithUser() {
+  const relatedUser0 = await Users.findOne({
+    offset: Math.floor(Math.random() * (await Users.count())),
+  });
+  const Task0 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 0,
+  });
+  if (Task0?.setUser) {
+    await Task0.setUser(relatedUser0);
+  }
+
+  const relatedUser1 = await Users.findOne({
+    offset: Math.floor(Math.random() * (await Users.count())),
+  });
+  const Task1 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 1,
+  });
+  if (Task1?.setUser) {
+    await Task1.setUser(relatedUser1);
+  }
+
+  const relatedUser2 = await Users.findOne({
+    offset: Math.floor(Math.random() * (await Users.count())),
+  });
+  const Task2 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 2,
+  });
+  if (Task2?.setUser) {
+    await Task2.setUser(relatedUser2);
+  }
+
+  const relatedUser3 = await Users.findOne({
+    offset: Math.floor(Math.random() * (await Users.count())),
+  });
+  const Task3 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 3,
+  });
+  if (Task3?.setUser) {
+    await Task3.setUser(relatedUser3);
+  }
+}
+
+async function associateTaskWithOrganization() {
+  const relatedOrganization0 = await Organizations.findOne({
     offset: Math.floor(Math.random() * (await Organizations.count())),
   });
-  const Contact4 = await Contacts.findOne({
+  const Task0 = await Tasks.findOne({
     order: [['id', 'ASC']],
-    offset: 4,
+    offset: 0,
   });
-  if (Contact4?.setOrganization) {
-    await Contact4.setOrganization(relatedOrganization4);
+  if (Task0?.setOrganization) {
+    await Task0.setOrganization(relatedOrganization0);
+  }
+
+  const relatedOrganization1 = await Organizations.findOne({
+    offset: Math.floor(Math.random() * (await Organizations.count())),
+  });
+  const Task1 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 1,
+  });
+  if (Task1?.setOrganization) {
+    await Task1.setOrganization(relatedOrganization1);
+  }
+
+  const relatedOrganization2 = await Organizations.findOne({
+    offset: Math.floor(Math.random() * (await Organizations.count())),
+  });
+  const Task2 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 2,
+  });
+  if (Task2?.setOrganization) {
+    await Task2.setOrganization(relatedOrganization2);
+  }
+
+  const relatedOrganization3 = await Organizations.findOne({
+    offset: Math.floor(Math.random() * (await Organizations.count())),
+  });
+  const Task3 = await Tasks.findOne({
+    order: [['id', 'ASC']],
+    offset: 3,
+  });
+  if (Task3?.setOrganization) {
+    await Task3.setOrganization(relatedOrganization3);
   }
 }
 
@@ -278,6 +371,8 @@ module.exports = {
 
     await Organizations.bulkCreate(OrganizationsData);
 
+    await Tasks.bulkCreate(TasksData);
+
     await Promise.all([
       // Similar logic for "relation_many"
 
@@ -286,6 +381,10 @@ module.exports = {
       await associateContactWithUser(),
 
       await associateContactWithOrganization(),
+
+      await associateTaskWithUser(),
+
+      await associateTaskWithOrganization(),
     ]);
   },
 
@@ -293,5 +392,7 @@ module.exports = {
     await queryInterface.bulkDelete('contacts', null, {});
 
     await queryInterface.bulkDelete('organizations', null, {});
+
+    await queryInterface.bulkDelete('tasks', null, {});
   },
 };

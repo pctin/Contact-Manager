@@ -53,6 +53,14 @@ const menuAside: MenuAsideItem[] = [
     permissions: 'READ_ORGANIZATIONS',
   },
   {
+    href: '/tasks/tasks-list',
+    label: 'Tasks',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    icon: icon.mdiTable ? icon.mdiTable : icon.mdiTable,
+    permissions: 'READ_TASKS',
+  },
+  {
     href: '/profile',
     label: 'Profile',
     icon: icon.mdiAccountCircle,

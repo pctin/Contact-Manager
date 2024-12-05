@@ -5,8 +5,8 @@ const bcrypt = require('bcrypt');
 const moment = require('moment');
 
 module.exports = function (sequelize, DataTypes) {
-  const contacts = sequelize.define(
-    'contacts',
+  const tasks = sequelize.define(
+    'tasks',
     {
       id: {
         type: DataTypes.UUID,
@@ -14,23 +14,11 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
       },
 
-      name: {
+      title: {
         type: DataTypes.TEXT,
       },
 
-      email_address: {
-        type: DataTypes.TEXT,
-      },
-
-      phone_number: {
-        type: DataTypes.TEXT,
-      },
-
-      website_link: {
-        type: DataTypes.TEXT,
-      },
-
-      address: {
+      description: {
         type: DataTypes.TEXT,
       },
 
@@ -47,12 +35,12 @@ module.exports = function (sequelize, DataTypes) {
     },
   );
 
-  contacts.associate = (db) => {
+  tasks.associate = (db) => {
     /// loop through entities and it's fields, and if ref === current e[name] and create relation has many on parent entity
 
     //end loop
 
-    db.contacts.belongsTo(db.users, {
+    db.tasks.belongsTo(db.users, {
       as: 'user',
       foreignKey: {
         name: 'userId',
@@ -60,7 +48,7 @@ module.exports = function (sequelize, DataTypes) {
       constraints: false,
     });
 
-    db.contacts.belongsTo(db.organizations, {
+    db.tasks.belongsTo(db.organizations, {
       as: 'organization',
       foreignKey: {
         name: 'organizationId',
@@ -68,14 +56,14 @@ module.exports = function (sequelize, DataTypes) {
       constraints: false,
     });
 
-    db.contacts.belongsTo(db.users, {
+    db.tasks.belongsTo(db.users, {
       as: 'createdBy',
     });
 
-    db.contacts.belongsTo(db.users, {
+    db.tasks.belongsTo(db.users, {
       as: 'updatedBy',
     });
   };
 
-  return contacts;
+  return tasks;
 };

@@ -98,7 +98,7 @@ export default function WebSite() {
         <FeaturesSection
           projectName={'Contact Manager'}
           image={['Feature-rich contact management']}
-          withBg={0}
+          withBg={1}
           features={features_points}
           mainText={`Discover Powerful Features of ${projectName}`}
           subTitle={`Explore how ${projectName} can transform your contact management with its robust features designed for efficiency and ease.`}

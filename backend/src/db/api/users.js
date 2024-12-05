@@ -263,6 +263,10 @@ module.exports = class UsersDBApi {
       transaction,
     });
 
+    output.tasks_user = await users.getTasks_user({
+      transaction,
+    });
+
     output.avatar = await users.getAvatar({
       transaction,
     });

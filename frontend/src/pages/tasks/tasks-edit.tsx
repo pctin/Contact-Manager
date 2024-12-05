@@ -26,7 +26,7 @@ import { SelectFieldMany } from '../../components/SelectFieldMany';
 import { SwitchField } from '../../components/SwitchField';
 import { RichTextField } from '../../components/RichTextField';
 
-import { update, fetch } from '../../stores/contacts/contactsSlice';
+import { update, fetch } from '../../stores/tasks/tasksSlice';
 import { useAppDispatch, useAppSelector } from '../../stores/hooks';
 import { useRouter } from 'next/router';
 import { saveFile } from '../../helpers/fileSaver';
@@ -35,27 +35,21 @@ import ImageField from '../../components/ImageField';
 
 import { hasPermission } from '../../helpers/userPermissions';
 
-const EditContactsPage = () => {
+const EditTasksPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const initVals = {
-    name: '',
+    title: '',
 
-    email_address: '',
-
-    phone_number: '',
-
-    website_link: '',
+    description: '',
 
     user: '',
 
     organization: '',
-
-    address: '',
   };
   const [initialValues, setInitialValues] = useState(initVals);
 
-  const { contacts } = useAppSelector((state) => state.contacts);
+  const { tasks } = useAppSelector((state) => state.tasks);
 
   const { currentUser } = useAppSelector((state) => state.auth);
 
@@ -66,37 +60,37 @@ const EditContactsPage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (typeof contacts === 'object') {
-      setInitialValues(contacts);
+    if (typeof tasks === 'object') {
+      setInitialValues(tasks);
     }
-  }, [contacts]);
+  }, [tasks]);
 
   useEffect(() => {
-    if (typeof contacts === 'object') {
+    if (typeof tasks === 'object') {
       const newInitialVal = { ...initVals };
 
       Object.keys(initVals).forEach(
-        (el) => (newInitialVal[el] = contacts[el] || ''),
+        (el) => (newInitialVal[el] = tasks[el] || ''),
       );
 
       setInitialValues(newInitialVal);
     }
-  }, [contacts]);
+  }, [tasks]);
 
   const handleSubmit = async (data) => {
     await dispatch(update({ id: id, data }));
-    await router.push('/contacts/contacts-list');
+    await router.push('/tasks/tasks-list');
   };
 
   return (
     <>
       <Head>
-        <title>{getPageTitle('Edit contacts')}</title>
+        <title>{getPageTitle('Edit tasks')}</title>
       </Head>
       <SectionMain>
         <SectionTitleLineWithButton
           icon={mdiChartTimelineVariant}
-          title={'Edit contacts'}
+          title={'Edit tasks'}
           main
         >
           {''}
@@ -108,20 +102,12 @@ const EditContactsPage = () => {
             onSubmit={(values) => handleSubmit(values)}
           >
             <Form>
-              <FormField label='Name'>
-                <Field name='name' placeholder='Name' />
+              <FormField label='Title'>
+                <Field name='title' placeholder='Title' />
               </FormField>
 
-              <FormField label='EmailAddress'>
-                <Field name='email_address' placeholder='EmailAddress' />
-              </FormField>
-
-              <FormField label='PhoneNumber'>
-                <Field name='phone_number' placeholder='PhoneNumber' />
-              </FormField>
-
-              <FormField label='WebsiteLink'>
-                <Field name='website_link' placeholder='WebsiteLink' />
+              <FormField label='Description'>
+                <Field name='description' placeholder='Description' />
               </FormField>
 
               <FormField label='User' labelFor='user'>
@@ -136,7 +122,7 @@ const EditContactsPage = () => {
               </FormField>
 
               {hasPermission(currentUser, 'READ_ORGANIZATIONS') && (
-                <FormField label='organization' labelFor='organization'>
+                <FormField label='Organization' labelFor='organization'>
                   <Field
                     name='organization'
                     id='organization'
@@ -148,10 +134,6 @@ const EditContactsPage = () => {
                 </FormField>
               )}
 
-              <FormField label='Address'>
-                <Field name='address' placeholder='Address' />
-              </FormField>
-
               <BaseDivider />
               <BaseButtons>
                 <BaseButton type='submit' color='info' label='Submit' />
@@ -161,7 +143,7 @@ const EditContactsPage = () => {
                   color='danger'
                   outline
                   label='Cancel'
-                  onClick={() => router.push('/contacts/contacts-list')}
+                  onClick={() => router.push('/tasks/tasks-list')}
                 />
               </BaseButtons>
             </Form>
@@ -172,12 +154,12 @@ const EditContactsPage = () => {
   );
 };
 
-EditContactsPage.getLayout = function getLayout(page: ReactElement) {
+EditTasksPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutAuthenticated permission={'UPDATE_CONTACTS'}>
+    <LayoutAuthenticated permission={'UPDATE_TASKS'}>
       {page}
     </LayoutAuthenticated>
   );
 };
 
-export default EditContactsPage;
+export default EditTasksPage;

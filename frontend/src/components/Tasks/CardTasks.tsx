@@ -10,7 +10,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import { hasPermission } from '../../helpers/userPermissions';
 
 type Props = {
-  contacts: any[];
+  tasks: any[];
   loading: boolean;
   onDelete: (id: string) => void;
   onView: (id: string) => void;
@@ -21,7 +21,7 @@ type Props = {
 };
 
 const CardUsers = ({
-  contacts,
+  tasks,
   loading,
   onEdit,
   onView,
@@ -39,7 +39,7 @@ const CardUsers = ({
   const focusRing = useAppSelector((state) => state.style.focusRingColor);
 
   const currentUser = useAppSelector((state) => state.auth.currentUser);
-  const hasUpdatePermission = hasPermission(currentUser, 'UPDATE_CONTACTS');
+  const hasUpdatePermission = hasPermission(currentUser, 'UPDATE_TASKS');
 
   return (
     <div className={'p-4'}>
@@ -49,7 +49,7 @@ const CardUsers = ({
         className='grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8'
       >
         {!loading &&
-          contacts.map((item, index) => (
+          tasks.map((item, index) => (
             <li
               key={item.id}
               className={`overflow-hidden ${
@@ -65,7 +65,7 @@ const CardUsers = ({
                   className='text-lg font-bold leading-6 line-clamp-1'
                   onClick={() => onView(item.id)}
                 >
-                  {item.name}
+                  {item.id}
                 </button>
 
                 <div className='ml-auto '>
@@ -74,49 +74,27 @@ const CardUsers = ({
                     onView={onView}
                     onEdit={onEdit}
                     itemId={item.id}
-                    pathEdit={`/contacts/contacts-edit/?id=${item.id}`}
-                    pathView={`/contacts/contacts-view/?id=${item.id}`}
+                    pathEdit={`/tasks/tasks-edit/?id=${item.id}`}
+                    pathView={`/tasks/tasks-view/?id=${item.id}`}
                     hasUpdatePermission={hasUpdatePermission}
                   />
                 </div>
               </div>
               <dl className='divide-y  divide-stone-300   dark:divide-dark-700 px-6 py-4 text-sm leading-6 h-64 overflow-y-auto'>
                 <div className='flex justify-between gap-x-4 py-3'>
-                  <dt className='  text-gray-500  dark:text-dark-600'>Name</dt>
+                  <dt className='  text-gray-500  dark:text-dark-600'>Title</dt>
                   <dd className='flex items-start gap-x-2'>
-                    <div className='font-medium line-clamp-4'>{item.name}</div>
+                    <div className='font-medium line-clamp-4'>{item.title}</div>
                   </dd>
                 </div>
 
                 <div className='flex justify-between gap-x-4 py-3'>
                   <dt className='  text-gray-500  dark:text-dark-600'>
-                    EmailAddress
+                    Description
                   </dt>
                   <dd className='flex items-start gap-x-2'>
                     <div className='font-medium line-clamp-4'>
-                      {item.email_address}
-                    </div>
-                  </dd>
-                </div>
-
-                <div className='flex justify-between gap-x-4 py-3'>
-                  <dt className='  text-gray-500  dark:text-dark-600'>
-                    PhoneNumber
-                  </dt>
-                  <dd className='flex items-start gap-x-2'>
-                    <div className='font-medium line-clamp-4'>
-                      {item.phone_number}
-                    </div>
-                  </dd>
-                </div>
-
-                <div className='flex justify-between gap-x-4 py-3'>
-                  <dt className='  text-gray-500  dark:text-dark-600'>
-                    WebsiteLink
-                  </dt>
-                  <dd className='flex items-start gap-x-2'>
-                    <div className='font-medium line-clamp-4'>
-                      {item.website_link}
+                      {item.description}
                     </div>
                   </dd>
                 </div>
@@ -132,18 +110,20 @@ const CardUsers = ({
 
                 <div className='flex justify-between gap-x-4 py-3'>
                   <dt className='  text-gray-500  dark:text-dark-600'>
-                    Address
+                    Organization
                   </dt>
                   <dd className='flex items-start gap-x-2'>
                     <div className='font-medium line-clamp-4'>
-                      {item.address}
+                      {dataFormatter.organizationsOneListFormatter(
+                        item.organization,
+                      )}
                     </div>
                   </dd>
                 </div>
               </dl>
             </li>
           ))}
-        {!loading && contacts.length === 0 && (
+        {!loading && tasks.length === 0 && (
           <div className='col-span-full flex items-center justify-center h-40'>
             <p className=''>No data to display</p>
           </div>

@@ -130,6 +130,8 @@ const OrganizationsView = () => {
                       <th>PhoneNumber</th>
 
                       <th>WebsiteLink</th>
+
+                      <th>Address</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -153,12 +155,53 @@ const OrganizationsView = () => {
                           <td data-label='phone_number'>{item.phone_number}</td>
 
                           <td data-label='website_link'>{item.website_link}</td>
+
+                          <td data-label='address'>{item.address}</td>
                         </tr>
                       ))}
                   </tbody>
                 </table>
               </div>
               {!organizations?.contacts_organization?.length && (
+                <div className={'text-center py-4'}>No data</div>
+              )}
+            </CardBox>
+          </>
+
+          <>
+            <p className={'block font-bold mb-2'}>Tasks Organization</p>
+            <CardBox
+              className='mb-6 border border-gray-300 rounded overflow-hidden'
+              hasTable
+            >
+              <div className='overflow-x-auto'>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {organizations.tasks_organization &&
+                      Array.isArray(organizations.tasks_organization) &&
+                      organizations.tasks_organization.map((item: any) => (
+                        <tr
+                          key={item.id}
+                          onClick={() =>
+                            router.push(`/tasks/tasks-view/?id=${item.id}`)
+                          }
+                        >
+                          <td data-label='title'>{item.title}</td>
+
+                          <td data-label='description'>{item.description}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              {!organizations?.tasks_organization?.length && (
                 <div className={'text-center py-4'}>No data</div>
               )}
             </CardBox>
